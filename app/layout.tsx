@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ToastContainer from "@/app/components/ToastContainer";
-import Sidebar from "@/app/components/Sidebar";
-import { prisma } from "@/lib/prisma";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,33 +14,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Neon DB Todo POC",
-  description: "Todo POC with Neon + Next.js",
+  title: "Neon DB POC",
+  description: "Next.js + Neon DB proof of concept",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [todosContent, dashboardContent] = await Promise.all([
-    prisma.pageContent.findUnique({ where: { page: "todos" }, select: { heading: true } }),
-    prisma.pageContent.findUnique({ where: { page: "dashboard" }, select: { heading: true } }),
-  ]);
-
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <div className="flex flex-1">
-          <div className="flex-1 min-w-0">{children}</div>
-          <Sidebar
-            todoHeading={todosContent?.heading ?? "My Todos"}
-            dashboardHeading={dashboardContent?.heading ?? "Dashboard"}
-          />
-        </div>
+      <body className="min-h-full">
+        {children}
         <ToastContainer />
       </body>
     </html>

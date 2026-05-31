@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Sidebar({ todoHeading, dashboardHeading }: { todoHeading: string; dashboardHeading: string }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    if (window.innerWidth < 768) setCollapsed(true);
+  }, []);
 
   const nav = [
     {
@@ -19,7 +23,7 @@ export default function Sidebar({ todoHeading, dashboardHeading }: { todoHeading
       ),
     },
     {
-      href: "/",
+      href: "/todos",
       label: todoHeading,
       icon: (
         <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -49,9 +53,8 @@ export default function Sidebar({ todoHeading, dashboardHeading }: { todoHeading
 
   return (
     <aside
-      className={`relative flex shrink-0 flex-col border-l border-zinc-200 bg-white transition-all duration-200 dark:border-zinc-800 dark:bg-zinc-900 ${
-        collapsed ? "w-14" : "w-52"
-      }`}
+      className={`relative flex shrink-0 flex-col border-l border-zinc-200 bg-white transition-all duration-200 dark:border-zinc-800 dark:bg-zinc-900 ${collapsed ? "w-14" : "w-52"
+        }`}
     >
       {/* Toggle button */}
       <button
@@ -76,31 +79,28 @@ export default function Sidebar({ todoHeading, dashboardHeading }: { todoHeading
         {collapsed ? (
           <span className="text-lg font-bold text-zinc-400 dark:text-zinc-500">N</span>
         ) : (
-          <span className="truncate text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-            Neon DB Todo POC
-          </span>
+          <Link href="/" >
+            <span className="pl-2 truncate text-sm md:text-base font-bold text-zinc-900 dark:text-zinc-100">
+              Neon DB POC
+            </span>
+          </Link>
         )}
       </div>
 
       {/* Nav */}
       <nav className="flex flex-col gap-1 p-2">
         {nav.map((item) => {
-          const active =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
+          const active = pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               title={collapsed ? item.label : undefined}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
-                collapsed ? "justify-center" : ""
-              } ${
-                active
+              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${collapsed ? "justify-center" : ""
+                } ${active
                   ? "bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
                   : "text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:hover:text-zinc-300"
-              }`}
+                }`}
             >
               {item.icon}
               {!collapsed && <span className="truncate">{item.label}</span>}

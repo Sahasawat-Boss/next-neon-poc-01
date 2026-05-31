@@ -17,18 +17,17 @@ export default async function DashboardPage() {
   const fail = todos.filter((t: TodoRow) => t.status === "FAIL").length;
 
   const stats = [
-    { label: "Total",  value: total,           color: "text-zinc-700 dark:text-zinc-300" },
-    { label: "Done",   value: completed,        color: "text-emerald-600" },
-    { label: "Undone", value: total - completed,color: "text-zinc-400" },
-    { label: "Pass",   value: pass,             color: "text-emerald-600" },
-    { label: "Fail",   value: fail,             color: "text-red-500" },
+    { label: "Total",  value: total,            color: "text-zinc-700 dark:text-zinc-300" },
+    { label: "Done",   value: completed,         color: "text-emerald-600" },
+    { label: "Undone", value: total - completed, color: "text-zinc-400" },
+    { label: "Pass",   value: pass,              color: "text-emerald-600" },
+    { label: "Fail",   value: fail,              color: "text-red-500" },
   ];
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
-      {/* Banner image */}
       {content?.imageData && (
-        <div className="h-48 w-full overflow-hidden">
+        <div className="h-[30vh] w-full overflow-hidden">
           <img
             src="/api/page-image/dashboard"
             alt="Dashboard banner"
@@ -39,7 +38,6 @@ export default async function DashboardPage() {
 
       <div className="px-8 py-12">
         <div className="mx-auto max-w-2xl">
-          {/* Header */}
           <div className="mb-8">
             <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
               {content?.heading ?? "Dashboard"}
@@ -49,7 +47,6 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          {/* Stat cards */}
           <div className="mb-8 grid grid-cols-5 gap-3">
             {stats.map((s) => (
               <div
@@ -62,7 +59,6 @@ export default async function DashboardPage() {
             ))}
           </div>
 
-          {/* Charts */}
           <DashboardCharts
             total={total}
             completed={completed}

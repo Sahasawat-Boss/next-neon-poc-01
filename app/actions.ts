@@ -31,7 +31,7 @@ export async function updatePageContent(formData: FormData) {
     update: { heading, description, ...imageFields },
     create: { page, heading, description, ...imageFields },
   });
-  revalidatePath("/");
+  revalidatePath("/todos");
   revalidatePath("/cms");
   revalidatePath("/dashboard");
 }
@@ -48,7 +48,7 @@ export async function addTodo(formData: FormData) {
     data: { title, startDate: startDateStr ? new Date(startDateStr) : new Date() },
   });
   await log(title, "Created");
-  revalidatePath("/");
+  revalidatePath("/todos");
 }
 
 export async function toggleTodo(id: number) {
@@ -56,21 +56,21 @@ export async function toggleTodo(id: number) {
   if (!todo) return;
   await prisma.todo.update({ where: { id }, data: { completed: !todo.completed } });
   await log(todo.title, todo.completed ? "Reopened" : "Completed");
-  revalidatePath("/");
+  revalidatePath("/todos");
 }
 
 export async function deleteTodo(id: number) {
   const todo = await prisma.todo.findUnique({ where: { id }, select: { title: true } });
   await prisma.todo.delete({ where: { id } });
   if (todo) await log(todo.title, "Deleted");
-  revalidatePath("/");
+  revalidatePath("/todos");
 }
 
 export async function setTodoStatus(id: number, status: string | null) {
   const todo = await prisma.todo.findUnique({ where: { id }, select: { title: true } });
   await prisma.todo.update({ where: { id }, data: { status } });
   if (todo) await log(todo.title, status ? `Status → ${status}` : "Status cleared");
-  revalidatePath("/");
+  revalidatePath("/todos");
 }
 
 export async function uploadImage(todoId: number, formData: FormData) {
@@ -83,7 +83,7 @@ export async function uploadImage(todoId: number, formData: FormData) {
     data: { todoId, data: buffer, mimeType: file.type, name: file.name },
   });
   if (todo) await log(todo.title, `Added image: ${file.name}`);
-  revalidatePath("/");
+  revalidatePath("/todos");
 }
 
 export async function deleteImage(imageId: number) {
@@ -93,7 +93,7 @@ export async function deleteImage(imageId: number) {
   });
   await prisma.todoImage.delete({ where: { id: imageId } });
   if (image) await log(image.todo.title, `Removed image: ${image.name}`);
-  revalidatePath("/");
+  revalidatePath("/todos");
 }
 
 export async function updateTodoDetails(id: number, formData: FormData) {
@@ -110,5 +110,5 @@ export async function updateTodoDetails(id: number, formData: FormData) {
     },
   });
   if (todo) await log(todo.title, "Updated details");
-  revalidatePath("/");
+  revalidatePath("/todos");
 }

@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/prisma";
 
 const actionMeta: Record<string, { color: string; icon: string }> = {
-  Created:          { color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", icon: "✦" },
-  Completed:        { color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", icon: "✓" },
-  Reopened:         { color: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400", icon: "↩" },
-  Deleted:          { color: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400", icon: "✕" },
-  "Updated details":{ color: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400", icon: "✎" },
-  "Status cleared": { color: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400", icon: "○" },
+  Created:           { color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", icon: "✦" },
+  Completed:         { color: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400", icon: "✓" },
+  Reopened:          { color: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400", icon: "↩" },
+  Deleted:           { color: "bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400", icon: "✕" },
+  "Updated details": { color: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400", icon: "✎" },
+  "Status cleared":  { color: "bg-zinc-100 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400", icon: "○" },
 };
 
 function getMeta(action: string) {
@@ -54,11 +54,9 @@ export default async function ActivityPage() {
               const { color, icon } = getMeta(log.action);
               return (
                 <li key={log.id} className="mb-6 ml-5">
-                  {/* Dot on timeline */}
                   <span className={`absolute -left-2.5 flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold ring-4 ring-zinc-50 dark:ring-zinc-950 ${color}`}>
                     {icon}
                   </span>
-
                   <div className="rounded-lg border border-zinc-100 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
