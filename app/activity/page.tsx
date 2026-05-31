@@ -50,7 +50,7 @@ export default async function ActivityPage() {
           </p>
         ) : (
           <ol className="relative border-l border-zinc-200 dark:border-zinc-800">
-            {logs.map((log) => {
+            {logs.map((log: { id: number; todoTitle: string; action: string; createdAt: Date }) => {
               const { color, icon } = getMeta(log.action);
               return (
                 <li key={log.id} className="mb-6 ml-5">
