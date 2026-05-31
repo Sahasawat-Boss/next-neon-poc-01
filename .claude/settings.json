@@ -13,7 +13,8 @@
       "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\cms\")"
     ],
     "additionalDirectories": [
-      "d:\\Code\\01POC-TestProject\\next-neon-todolist\\app\\api\\images"
+      "d:\\Code\\01POC-TestProject\\next-neon-todolist\\app\\api\\images",
+      "d:\\Code\\01POC-TestProject\\next-neon-todolist\\app\\api\\page-image"
     ]
   }
 }

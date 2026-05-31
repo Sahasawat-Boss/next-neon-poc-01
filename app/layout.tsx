@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ToastContainer from "@/app/components/ToastContainer";
 import Sidebar from "@/app/components/Sidebar";
+import { prisma } from "@/lib/prisma";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,11 +20,16 @@ export const metadata: Metadata = {
   description: "Todo POC with Neon + Next.js",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const content = await prisma.pageContent.findUnique({
+    where: { page: "todos" },
+    select: { heading: true },
+  });
+
   return (
     <html
       lang="en"
@@ -32,7 +38,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <div className="flex flex-1">
           <div className="flex-1 min-w-0">{children}</div>
-          <Sidebar />
+          <Sidebar todoHeading={content?.heading ?? "My Todos"} />
         </div>
         <ToastContainer />
       </body>

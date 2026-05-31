@@ -8,13 +8,32 @@ export async function updatePageContent(formData: FormData) {
   const heading = (formData.get("heading") as string)?.trim();
   const description = (formData.get("description") as string)?.trim() || null;
   if (!page || !heading) return;
+
+  const clearImage = formData.get("clearImage") === "1";
+  const imageFile = formData.get("image") as File | null;
+
+  let imageFields: {
+    imageData?: Uint8Array<ArrayBuffer> | null;
+    imageMimeType?: string | null;
+  } = {};
+
+  if (clearImage) {
+    imageFields = { imageData: null, imageMimeType: null };
+  } else if (imageFile && imageFile.size > 0 && imageFile.type.startsWith("image/")) {
+    imageFields = {
+      imageData: new Uint8Array(await imageFile.arrayBuffer()) as Uint8Array<ArrayBuffer>,
+      imageMimeType: imageFile.type,
+    };
+  }
+
   await prisma.pageContent.upsert({
     where: { page },
-    update: { heading, description },
-    create: { page, heading, description },
+    update: { heading, description, ...imageFields },
+    create: { page, heading, description, ...imageFields },
   });
   revalidatePath("/");
   revalidatePath("/cms");
+  revalidatePath("/dashboard");
 }
 
 async function log(todoTitle: string, action: string) {
@@ -58,7 +77,7 @@ export async function uploadImage(todoId: number, formData: FormData) {
   const file = formData.get("image") as File;
   if (!file || file.size === 0) return;
   if (!file.type.startsWith("image/")) return;
-  const buffer = Buffer.from(await file.arrayBuffer());
+  const buffer = new Uint8Array(await file.arrayBuffer()) as Uint8Array<ArrayBuffer>;
   const todo = await prisma.todo.findUnique({ where: { id: todoId }, select: { title: true } });
   await prisma.todoImage.create({
     data: { todoId, data: buffer, mimeType: file.type, name: file.name },

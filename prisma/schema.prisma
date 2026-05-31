@@ -36,9 +36,11 @@ model ActivityLog {
 }
 
 model PageContent {
-  id          Int      @id @default(autoincrement())
-  page        String   @unique
-  heading     String
-  description String?
-  updatedAt   DateTime @updatedAt
+  id            Int      @id @default(autoincrement())
+  page          String   @unique
+  heading       String
+  description   String?
+  imageData     Bytes?
+  imageMimeType String?
+  updatedAt     DateTime @updatedAt
 }
