@@ -34,3 +34,11 @@ model ActivityLog {
   action    String
   createdAt DateTime @default(now())
 }
+
+model PageContent {
+  id          Int      @id @default(autoincrement())
+  page        String   @unique
+  heading     String
+  description String?
+  updatedAt   DateTime @updatedAt
+}

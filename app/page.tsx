@@ -3,15 +3,18 @@ import AddTodoForm from "@/app/components/AddTodoForm";
 import TodoList from "@/app/components/TodoList";
 
 export default async function Home() {
-  const rows = await prisma.todo.findMany({
-    orderBy: { createdAt: "desc" },
-    include: {
-      images: {
-        select: { id: true, name: true },
-        orderBy: { createdAt: "asc" },
+  const [content, rows] = await Promise.all([
+    prisma.pageContent.findUnique({ where: { page: "todos" } }),
+    prisma.todo.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        images: {
+          select: { id: true, name: true },
+          orderBy: { createdAt: "asc" },
+        },
       },
-    },
-  });
+    }),
+  ]);
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -33,10 +36,13 @@ export default async function Home() {
       <div className="w-full max-w-md">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            My Todos
+            {content?.heading ?? "My Todos"}
           </h1>
+          {content?.description && (
+            <p className="mt-1 text-sm text-zinc-500">{content.description}</p>
+          )}
           {todos.length > 0 && (
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1 text-sm text-zinc-400">
               {completed} / {todos.length} completed
             </p>
           )}

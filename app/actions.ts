@@ -3,6 +3,20 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export async function updatePageContent(formData: FormData) {
+  const page = formData.get("page") as string;
+  const heading = (formData.get("heading") as string)?.trim();
+  const description = (formData.get("description") as string)?.trim() || null;
+  if (!page || !heading) return;
+  await prisma.pageContent.upsert({
+    where: { page },
+    update: { heading, description },
+    create: { page, heading, description },
+  });
+  revalidatePath("/");
+  revalidatePath("/cms");
+}
+
 async function log(todoTitle: string, action: string) {
   await prisma.activityLog.create({ data: { todoTitle, action } });
 }
