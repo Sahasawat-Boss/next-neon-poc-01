@@ -7,12 +7,23 @@ datasource db {
 }
 
 model Todo {
-  id          Int       @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   title       String
-  completed   Boolean   @default(false)
+  completed   Boolean     @default(false)
   description String?
   status      String?
-  startDate   DateTime  @default(now())
+  startDate   DateTime    @default(now())
   dueDate     DateTime?
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime    @default(now())
+  images      TodoImage[]
+}
+
+model TodoImage {
+  id        Int      @id @default(autoincrement())
+  todoId    Int
+  todo      Todo     @relation(fields: [todoId], references: [id], onDelete: Cascade)
+  data      Bytes
+  mimeType  String
+  name      String
+  createdAt DateTime @default(now())
 }

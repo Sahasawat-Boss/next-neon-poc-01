@@ -37,6 +37,22 @@ export async function setTodoStatus(id: number, formData: FormData) {
   revalidatePath("/");
 }
 
+export async function uploadImage(todoId: number, formData: FormData) {
+  const file = formData.get("image") as File;
+  if (!file || file.size === 0) return;
+  if (!file.type.startsWith("image/")) return;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  await prisma.todoImage.create({
+    data: { todoId, data: buffer, mimeType: file.type, name: file.name },
+  });
+  revalidatePath("/");
+}
+
+export async function deleteImage(imageId: number) {
+  await prisma.todoImage.delete({ where: { id: imageId } });
+  revalidatePath("/");
+}
+
 export async function updateTodoDetails(id: number, formData: FormData) {
   const description = (formData.get("description") as string)?.trim() || null;
   const dueDateStr = formData.get("dueDate") as string | null;

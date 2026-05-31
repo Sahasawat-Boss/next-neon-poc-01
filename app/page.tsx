@@ -5,6 +5,12 @@ import TodoItem from "@/app/components/TodoItem";
 export default async function Home() {
   const rows = await prisma.todo.findMany({
     orderBy: { createdAt: "desc" },
+    include: {
+      images: {
+        select: { id: true, name: true },
+        orderBy: { createdAt: "asc" },
+      },
+    },
   });
 
   const today = new Date().toISOString().split("T")[0];
@@ -17,6 +23,7 @@ export default async function Home() {
     status: t.status,
     startDate: t.startDate?.toISOString().split("T")[0] ?? today,
     dueDate: t.dueDate ? t.dueDate.toISOString().split("T")[0] : null,
+    images: t.images.map((img) => ({ id: img.id, name: img.name })),
   }));
 
   const completed = todos.filter((t) => t.completed).length;
