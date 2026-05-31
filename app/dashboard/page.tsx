@@ -10,10 +10,11 @@ export default async function DashboardPage() {
     prisma.todo.findMany({ select: { completed: true, status: true } }),
   ]);
 
+  type TodoRow = { completed: boolean; status: string | null };
   const total = todos.length;
-  const completed = todos.filter((t) => t.completed).length;
-  const pass = todos.filter((t) => t.status === "PASS").length;
-  const fail = todos.filter((t) => t.status === "FAIL").length;
+  const completed = todos.filter((t: TodoRow) => t.completed).length;
+  const pass = todos.filter((t: TodoRow) => t.status === "PASS").length;
+  const fail = todos.filter((t: TodoRow) => t.status === "FAIL").length;
 
   const stats = [
     { label: "Total",  value: total,           color: "text-zinc-700 dark:text-zinc-300" },
