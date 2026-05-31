@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useTransition, useActionState, useEffect, useCallback } from "react";
+import { useState, useRef, useTransition, useActionState, useEffect } from "react";
 import {
   toggleTodo,
   deleteTodo,
@@ -25,12 +25,8 @@ type Todo = {
   images: TodoImage[];
 };
 
-export default function TodoItem({ todo, collapseKey = 0 }: { todo: Todo; collapseKey?: number }) {
+export default function TodoItem({ todo }: { todo: Todo }) {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (collapseKey > 0) setOpen(false);
-  }, [collapseKey]);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isPending, startTransition] = useTransition();
   const uploadFormRef = useRef<HTMLFormElement>(null);
