@@ -1,59 +1,165 @@
-import { toggleTodo, deleteTodo } from "@/app/actions";
+"use client";
+
+import { useState } from "react";
+import { useFormStatus } from "react-dom";
+import { toggleTodo, deleteTodo, updateTodoDetails } from "@/app/actions";
 
 type Todo = {
   id: number;
   title: string;
   completed: boolean;
+  description: string | null;
+  startDate: string;
+  dueDate: string | null;
 };
 
-export default function TodoItem({ todo }: { todo: Todo }) {
+function SaveButton() {
+  const { pending } = useFormStatus();
   return (
-    <li className="flex items-center gap-3 rounded-lg border border-zinc-100 bg-white px-4 py-3 dark:border-zinc-800 dark:bg-zinc-900">
-      <form action={toggleTodo.bind(null, todo.id)}>
-        <button
-          type="submit"
-          aria-label={todo.completed ? "Mark incomplete" : "Mark complete"}
-          className={`cursor-pointer flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition ${
+    <button
+      type="submit"
+      disabled={pending}
+      className="self-end rounded-lg bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white transition hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+    >
+      {pending ? "Saving…" : "Save"}
+    </button>
+  );
+}
+
+export default function TodoItem({ todo }: { todo: Todo }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <li className="rounded-lg border border-zinc-100 bg-white dark:border-zinc-800 dark:bg-zinc-900">
+      {/* Main row */}
+      <div className="flex items-center gap-3 px-4 py-3">
+        {/* Toggle complete */}
+        <form action={toggleTodo.bind(null, todo.id)}>
+          <button
+            type="submit"
+            aria-label={todo.completed ? "Mark incomplete" : "Mark complete"}
+            className={`cursor-pointer flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition ${
+              todo.completed
+                ? "border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100"
+                : "border-zinc-300 hover:border-zinc-500 dark:border-zinc-600"
+            }`}
+          >
+            {todo.completed && (
+              <svg
+                className="h-3 w-3 text-white dark:text-zinc-900"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={3}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+          </button>
+        </form>
+
+        {/* Title */}
+        <span
+          className={`flex-1 text-sm ${
             todo.completed
-              ? "border-zinc-900 bg-zinc-900 dark:border-zinc-100 dark:bg-zinc-100"
-              : "border-zinc-300 hover:border-zinc-500 dark:border-zinc-600"
+              ? "text-zinc-400 line-through dark:text-zinc-500"
+              : "text-zinc-800 dark:text-zinc-200"
           }`}
         >
-          {todo.completed && (
-            <svg
-              className=" h-3 w-3 text-white dark:text-zinc-900"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={3}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          )}
-        </button>
-      </form>
+          {todo.title}
+        </span>
 
-      <span
-        className={`flex-1 text-sm  ${
-          todo.completed
-            ? "text-zinc-400 line-through dark:text-zinc-500"
-            : "text-zinc-800 dark:text-zinc-200"
-        }`}
-      >
-        {todo.title}
-      </span>
+        {/* Due date badge */}
+        {todo.dueDate && (
+          <span className="shrink-0 rounded-md bg-zinc-100 px-2 py-0.5 text-xs text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400">
+            Due {todo.dueDate}
+          </span>
+        )}
 
-      <form action={deleteTodo.bind(null, todo.id)}>
+        {/* Expand toggle */}
         <button
-          type="submit"
-          aria-label="Delete"
-          className="cursor-pointer text-zinc-300 transition hover:text-red-500 dark:text-zinc-600 dark:hover:text-red-400"
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Collapse" : "Expand"}
+          className="cursor-pointer text-zinc-400 transition hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
         >
-          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className={`h-4 w-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-      </form>
+
+        {/* Delete */}
+        <form action={deleteTodo.bind(null, todo.id)}>
+          <button
+            type="submit"
+            aria-label="Delete"
+            className="cursor-pointer text-zinc-300 transition hover:text-red-500 dark:text-zinc-600 dark:hover:text-red-400"
+          >
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      {/* Expandable detail section */}
+      <div
+        className={`grid transition-all duration-200 ease-in-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <form
+            action={updateTodoDetails.bind(null, todo.id)}
+            className="flex flex-col gap-3 border-t border-zinc-100 px-4 py-4 dark:border-zinc-800"
+          >
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                Start date
+              </label>
+              <input
+                type="date"
+                name="startDate"
+                defaultValue={todo.startDate}
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-500"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                Description
+              </label>
+              <textarea
+                name="description"
+                defaultValue={todo.description ?? ""}
+                rows={3}
+                placeholder="Add details…"
+                className="w-full resize-none rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-500"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                Due date
+              </label>
+              <input
+                type="date"
+                name="dueDate"
+                defaultValue={todo.dueDate ?? ""}
+                className="w-full rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-500"
+              />
+            </div>
+
+            <SaveButton />
+          </form>
+        </div>
+      </div>
     </li>
   );
 }

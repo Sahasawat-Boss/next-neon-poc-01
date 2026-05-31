@@ -17,7 +17,7 @@ function SubmitButton() {
   );
 }
 
-export default function AddTodoForm() {
+export default function AddTodoForm({ today }: { today: string }) {
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
@@ -27,16 +27,30 @@ export default function AddTodoForm() {
         await addTodo(formData);
         formRef.current?.reset();
       }}
-      className="flex gap-2"
+      className="flex flex-col gap-2"
     >
-      <input
-        name="title"
-        type="text"
-        placeholder="Add a new todo..."
-        required
-        className="flex-1 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-500"
-      />
-      <SubmitButton />
+      <div className="flex gap-2">
+        <input
+          name="title"
+          type="text"
+          placeholder="Add a new todo..."
+          required
+          className="flex-1 rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:focus:border-zinc-500"
+        />
+        <SubmitButton />
+      </div>
+
+      <div className="flex items-center gap-2 pl-1">
+        <span className="text-xs text-zinc-400 dark:text-zinc-500">
+          Start date
+        </span>
+        <input
+          name="startDate"
+          type="date"
+          defaultValue={today}
+          className="rounded-md border border-zinc-200 bg-white px-2 py-1 text-xs text-zinc-600 outline-none focus:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-400 dark:focus:border-zinc-500"
+        />
+      </div>
     </form>
   );
 }

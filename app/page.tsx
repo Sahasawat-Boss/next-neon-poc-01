@@ -3,9 +3,20 @@ import AddTodoForm from "@/app/components/AddTodoForm";
 import TodoItem from "@/app/components/TodoItem";
 
 export default async function Home() {
-  const todos = await prisma.todo.findMany({
+  const rows = await prisma.todo.findMany({
     orderBy: { createdAt: "desc" },
   });
+
+  const today = new Date().toISOString().split("T")[0];
+
+  const todos = rows.map((t) => ({
+    id: t.id,
+    title: t.title,
+    completed: t.completed,
+    description: t.description,
+    startDate: t.startDate?.toISOString().split("T")[0] ?? today,
+    dueDate: t.dueDate ? t.dueDate.toISOString().split("T")[0] : null,
+  }));
 
   const completed = todos.filter((t) => t.completed).length;
 
@@ -23,7 +34,7 @@ export default async function Home() {
           )}
         </div>
 
-        <AddTodoForm />
+        <AddTodoForm today={today} />
 
         {todos.length === 0 ? (
           <p className="mt-12 text-center text-sm text-zinc-400">
