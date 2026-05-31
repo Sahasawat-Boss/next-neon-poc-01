@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useFormStatus } from "react-dom";
 import { addTodo } from "@/app/actions";
+import { showToast } from "@/lib/toast";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -26,6 +27,7 @@ export default function AddTodoForm({ today }: { today: string }) {
       action={async (formData) => {
         await addTodo(formData);
         formRef.current?.reset();
+        showToast("Todo added!");
       }}
       className="flex flex-col gap-2"
     >

@@ -31,9 +31,8 @@ export async function deleteTodo(id: number) {
   revalidatePath("/");
 }
 
-export async function setTodoStatus(id: number, formData: FormData) {
-  const next = formData.get("status") as string | null;
-  await prisma.todo.update({ where: { id }, data: { status: next || null } });
+export async function setTodoStatus(id: number, status: string | null) {
+  await prisma.todo.update({ where: { id }, data: { status } });
   revalidatePath("/");
 }
 
