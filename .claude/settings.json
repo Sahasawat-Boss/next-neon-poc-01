@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\lib\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Host \"done\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\lib\")",
+      "PowerShell(node --version)",
+      "PowerShell(node -e \"const pkg = require\\('./node_modules/next/package.json'\\); console.log\\(pkg.version\\)\")",
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\components\")"
+    ]
+  }
+}
