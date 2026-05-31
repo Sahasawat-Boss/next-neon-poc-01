@@ -22,6 +22,15 @@ const nav = [
       </svg>
     ),
   },
+  {
+    href: "/activity",
+    label: "Activity Log",
+    icon: (
+      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+    ),
+  },
 ];
 
 export default function Sidebar() {
@@ -32,7 +41,7 @@ export default function Sidebar() {
       {/* Header */}
       <div className="flex h-16 items-center border-b border-zinc-100 px-5 dark:border-zinc-800">
         <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          My Todo App
+          Neon DB Todo POC
         </span>
       </div>
 

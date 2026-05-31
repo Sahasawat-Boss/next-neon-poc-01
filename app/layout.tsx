@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "My Todo App",
-  description: "Todo list with Neon + Next.js",
+  title: "Neon DB Todo POC",
+  description: "Todo POC with Neon + Next.js",
 };
 
 export default function RootLayout({

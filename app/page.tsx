@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import AddTodoForm from "@/app/components/AddTodoForm";
-import TodoItem from "@/app/components/TodoItem";
+import TodoList from "@/app/components/TodoList";
 
 export default async function Home() {
   const rows = await prisma.todo.findMany({
@@ -44,17 +44,7 @@ export default async function Home() {
 
         <AddTodoForm today={today} />
 
-        {todos.length === 0 ? (
-          <p className="mt-12 text-center text-sm text-zinc-400">
-            No todos yet — add one above.
-          </p>
-        ) : (
-          <ul className="mt-4 flex flex-col gap-2">
-            {todos.map((todo) => (
-              <TodoItem key={todo.id} todo={todo} />
-            ))}
-          </ul>
-        )}
+        <TodoList todos={todos} />
       </div>
     </div>
   );
