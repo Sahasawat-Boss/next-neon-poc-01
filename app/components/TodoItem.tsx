@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
-import { toggleTodo, deleteTodo, updateTodoDetails } from "@/app/actions";
+import { toggleTodo, deleteTodo, updateTodoDetails, setTodoStatus } from "@/app/actions";
 
 type Todo = {
   id: number;
   title: string;
   completed: boolean;
   description: string | null;
+  status: string | null;
   startDate: string;
   dueDate: string | null;
 };
@@ -68,6 +69,36 @@ export default function TodoItem({ todo }: { todo: Todo }) {
         >
           {todo.title}
         </span>
+
+        {/* Pass / Fail buttons */}
+        <div className="flex shrink-0 gap-1">
+          <form action={setTodoStatus.bind(null, todo.id)}>
+            <input type="hidden" name="status" value={todo.status === "PASS" ? "" : "PASS"} />
+            <button
+              type="submit"
+              className={`cursor-pointer rounded-md px-2.5 py-0.5 text-xs font-medium transition ${
+                todo.status === "PASS"
+                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                  : "bg-zinc-100 text-zinc-500 hover:bg-emerald-100 hover:text-emerald-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-emerald-900/30 dark:hover:text-emerald-400"
+              }`}
+            >
+              Pass
+            </button>
+          </form>
+          <form action={setTodoStatus.bind(null, todo.id)}>
+            <input type="hidden" name="status" value={todo.status === "FAIL" ? "" : "FAIL"} />
+            <button
+              type="submit"
+              className={`cursor-pointer rounded-md px-2.5 py-0.5 text-xs font-medium transition ${
+                todo.status === "FAIL"
+                  ? "bg-red-500 text-white hover:bg-red-600"
+                  : "bg-zinc-100 text-zinc-500 hover:bg-red-100 hover:text-red-600 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-red-900/30 dark:hover:text-red-400"
+              }`}
+            >
+              Fail
+            </button>
+          </form>
+        </div>
 
         {/* Due date badge */}
         {todo.dueDate && (

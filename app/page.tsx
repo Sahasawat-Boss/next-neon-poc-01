@@ -14,6 +14,7 @@ export default async function Home() {
     title: t.title,
     completed: t.completed,
     description: t.description,
+    status: t.status,
     startDate: t.startDate?.toISOString().split("T")[0] ?? today,
     dueDate: t.dueDate ? t.dueDate.toISOString().split("T")[0] : null,
   }));

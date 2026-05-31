@@ -31,6 +31,12 @@ export async function deleteTodo(id: number) {
   revalidatePath("/");
 }
 
+export async function setTodoStatus(id: number, formData: FormData) {
+  const next = formData.get("status") as string | null;
+  await prisma.todo.update({ where: { id }, data: { status: next || null } });
+  revalidatePath("/");
+}
+
 export async function updateTodoDetails(id: number, formData: FormData) {
   const description = (formData.get("description") as string)?.trim() || null;
   const dueDateStr = formData.get("dueDate") as string | null;

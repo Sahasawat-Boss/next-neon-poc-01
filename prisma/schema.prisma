@@ -11,6 +11,7 @@ model Todo {
   title       String
   completed   Boolean   @default(false)
   description String?
+  status      String?
   startDate   DateTime  @default(now())
   dueDate     DateTime?
   createdAt   DateTime  @default(now())
