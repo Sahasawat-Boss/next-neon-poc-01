@@ -10,7 +10,8 @@
       "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\components\")",
       "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\dashboard\")",
       "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\activity\")",
-      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\cms\")"
+      "PowerShell(New-Item -ItemType Directory -Force \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\\\\app\\\\cms\")",
+      "PowerShell(Get-ChildItem -Recurse -File -Path \"d:\\\\Code\\\\01POC-TestProject\\\\next-neon-todolist\" | Where-Object { $_.FullName -notmatch \"node_modules|\\\\.next|\\\\.git\" } | Select-Object -ExpandProperty FullName)"
     ],
     "additionalDirectories": [
       "d:\\Code\\01POC-TestProject\\next-neon-todolist\\app\\api\\images",
