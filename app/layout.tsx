@@ -25,10 +25,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const content = await prisma.pageContent.findUnique({
-    where: { page: "todos" },
-    select: { heading: true },
-  });
+  const [todosContent, dashboardContent] = await Promise.all([
+    prisma.pageContent.findUnique({ where: { page: "todos" }, select: { heading: true } }),
+    prisma.pageContent.findUnique({ where: { page: "dashboard" }, select: { heading: true } }),
+  ]);
 
   return (
     <html
@@ -38,7 +38,10 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         <div className="flex flex-1">
           <div className="flex-1 min-w-0">{children}</div>
-          <Sidebar todoHeading={content?.heading ?? "My Todos"} />
+          <Sidebar
+            todoHeading={todosContent?.heading ?? "My Todos"}
+            dashboardHeading={dashboardContent?.heading ?? "Dashboard"}
+          />
         </div>
         <ToastContainer />
       </body>
